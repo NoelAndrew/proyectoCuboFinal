@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Iot 1</title>
+    <link rel="stylesheet" href="./public/styles.css">
+</head>
+
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        var clientId = 'client_id_' + Math.floor(Math.random() * 10000000) + 1;
+        client = new Paho.MQTT.Client("driver.cloudmqtt.com", 38625, clientId);
+
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
+
+        var options = {
+            useSSL: true,
+            userName: "bmtqnhmu",
+            password: "KHw4Itds6hTj",
+            onSuccess: onConnect,
+            onFailure: doFail
+        }
+
+        client.connect(options);
+
+        function onConnect() {
+            console.log("Conexión exitosa!");
+            client.subscribe("salida_luis");
+        }
+
+        function onMessageArrived(message) {
+            console.log("Un mensaje ha llegado: " + message.payloadString);
+        }
+
+        function doFail(e) {
+            console.log(e);
+        }
+
+        function onConnectionLost(responeObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log("onConnectionLost: " + responeObject.errorMessage);
+            }
+        }
+
+        function command(value) {
+            console.log(value);
+            message = new Paho.MQTT.Message(value + "");
+            message.destinationName = "entrada_luis";
+            client.send(message);
+        }
+
+    </script>
+
+<nav class="bg-gray-800">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div class="relative flex items-center justify-between h-16">
+            <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+                <div class="flex-shrink-0 flex items-center">
+                    <img class="block lg:hidden h-8 w-auto"
+                        src="./public/assets/icon.png" alt="Workflow">
+                    <img class="hidden lg:block h-8 w-auto"
+                        src="./public/assets/icon.png"
+                        alt="Workflow">
+                </div>
+                
+                <div class="hidden sm:block sm:ml-6">
+                    <div class="flex space-x-4">
+                        <a href="team.html"
+                            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Equipo</a>
+
+                        <a href="index.html"
+                            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Proyecto</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sm:hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="team.html"
+                class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Equipo</a>
+
+            <a href="index.html"
+                class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Proyecto</a>
+        </div>
+    </div>
+</nav>
+
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-4 py-12 pt-20 pb-20">
+        <div class="text-center pb-8 mb-6">
+            <h2 class="text-4xl font-semibold text-indigo-600">Patrones</h2>
+            <p class="text-lg m-4 text-gray-800">
+                Elige un patrón y este será enviado a nuestro cubo en tiempo real!.
+            </p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-4">
+            <div class="w-full bg-white rounded-lg sahdow-lg overflow-hidden flex flex-col justify-center items-center">
+                <div>
+                    <img class="object-center object-cover h-2/3 w-full" src="./public/assets/gifs/apagar.GIF" alt="photo">
+                    <div class="text-center sm:py-6">
+                        <!-- <p class="text-xl text-gray-700 font-bold mb-2">Espiral</p> -->
+                        <button onclick="command(0)" class="p-2 pl-5 pr-5 w-full transition-colors duration-700 transform bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300">Apagar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white rounded-lg sahdow-lg overflow-hidden flex flex-col justify-center items-center">
+                <div>
+                    <img class="object-center object-cover h-2/3 w-full" src="./public/assets/gifs/encender.GIF" alt="photo">
+                    <div class="text-center sm:py-6">
+                        <!-- <p class="text-xl text-gray-700 font-bold mb-2">Espiral</p> -->
+                        <button onclick="command(1)" class="p-2 pl-5 pr-5 w-full transition-colors duration-700 transform bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300">Encender</button>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white rounded-lg sahdow-lg overflow-hidden flex flex-col justify-center items-center">
+                <div>
+                    <img class="object-center object-cover h-2/3 w-full" src="./public/assets/gifs/parpadeo.GIF" alt="photo">
+                    <div class="text-center sm:py-6">
+                        <!-- <p class="text-xl text-gray-700 font-bold mb-2">Espiral</p> -->
+                        <button onclick="command(2)" class="p-2 pl-5 pr-5 w-full transition-colors duration-700 transform bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300">Parpadeo</button>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white rounded-lg sahdow-lg overflow-hidden flex flex-col justify-center items-center">
+                <div>
+                    <img class="object-center object-cover h-2/3 w-full" src="./public/assets/gifs/parpadeo-aleatorio.GIF" alt="photo">
+                    <div class="text-center sm:py-6">
+                        <!-- <p class="text-xl text-gray-700 font-bold mb-2">Espiral</p> -->
+                        <button onclick="command(3)" class="p-2 pl-5 pr-5 w-full transition-colors duration-700 transform bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300">Parpadeo Aleatorio</button>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white rounded-lg sahdow-lg overflow-hidden flex flex-col justify-center items-center">
+                <div>
+                    <img class="object-center object-cover h-2/3 w-full" src="./public/assets/gifs/lluvia.GIF" alt="photo">
+                    <div class="text-center sm:py-6">
+                        <!-- <p class="text-xl text-gray-700 font-bold mb-2">Espiral</p> -->
+                        <button onclick="command(4)" class="p-2 pl-5 pr-5 w-full transition-colors duration-700 transform bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300">LLuvia</button>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white rounded-lg sahdow-lg overflow-hidden flex flex-col justify-center items-center">
+                <div>
+                    <img class="object-center object-cover h-2/3 w-full" src="./public/assets/gifs/espiral.GIF" alt="photo">
+                    <div class="text-center sm:py-6">
+                        <!-- <p class="text-xl text-gray-700 font-bold mb-2">Espiral</p> -->
+                        <button onclick="command(5)" class="p-2 pl-5 pr-5 w-full transition-colors duration-700 transform bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300">Espiral</button>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-white rounded-lg sahdow-lg overflow-hidden flex flex-col justify-center items-center">
+                <div>
+                    <img class="object-center object-cover h-2/3 w-full" src="./public/assets/gifs/pisos.GIF" alt="photo">
+                    <div class="text-center sm:py-6">
+                        <!-- <p class="text-xl text-gray-700 font-bold mb-2">Espiral</p> -->
+                        <button onclick="command(6)" class="p-2 pl-5 pr-5 w-full transition-colors duration-700 transform bg-indigo-500 hover:bg-blue-400 text-gray-100 text-lg rounded-lg focus:border-4 border-indigo-300">Pisos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
